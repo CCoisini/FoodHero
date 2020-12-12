@@ -1,25 +1,38 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue'
+import Router from 'vue-router'
+Vue.use(Router)
+import Home from '@/views/home/Home.vue'   // 引入组件 打包会打包在文件中，如果都用import的话，所有组件都会打包在一个文件中
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+const Login = () => import( '@/views/user-login/index');
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+const router = new Router({
+    mode: 'history',  // hash http://localhost:8081#home   http://localhost:8081/home
+    routes: [
+      {
+        path: '/',
+        name: 'home',
+        title: '首页',
+        component: Home
+      },
+      {
+        path: '/login',
+        name: 'login',
+        title: '登录页',
+        component: Login,
+        meta: {
+          login: true
+        },
+      },
+    //   ...viewsRoute,
+      {
+        path: '*',
+        name: 'noFound',
+        title: '未找到',
+        redirect: {
+          name: 'home'
+        }
+      }
+    ]
+  })
 
-export default router
+export default router;
